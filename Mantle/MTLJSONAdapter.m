@@ -236,10 +236,21 @@ static NSString * const MTLJSONAdapterThrownExceptionErrorKey = @"MTLJSONAdapter
 					if ([mappedPropertyKey isEqualToString:[NSString stringWithFormat:@"%s",pro_name]]) {
 						NSRange rangeNum = [pro_Attributes_Str rangeOfString:@"NSNumber"];
 						if (rangeNum.length != 0) {
-							value = [NSNumber numberWithFloat:[value floatValue]];
+							if(![value isKindOfClass:[NSNumber class]]){
+								NSNumberFormatter *f = [[NSNumberFormatter alloc] init];
+								f.numberStyle = NSNumberFormatterDecimalStyle;
+								if (value == [NSNull null] || value == nil || value == Nil) {
+									continue;
+								}
+								value = [f numberFromString:value];
+							}
+
 						}
 						NSRange rangeStr = [pro_Attributes_Str rangeOfString:@"NSString"];
 						if (rangeStr.length != 0) {
+							if (value == [NSNull null] || value == nil || value == Nil) {
+								continue;
+							}
 							value = [NSString stringWithFormat:@"%@",value];
 						}
 					}
